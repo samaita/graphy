@@ -5,12 +5,17 @@
 	Developer: @GaryAlmas
 	Graphy, simple sketch app using Fabric.js, Free Drawing.
 	
+	v0.0.2:
+		Add & Enable button Clear / New Draw
+		Simplified FreeDrawing.
+	
 	v0.0.1:
 		Simplified FreeDrawing.
 		Add resize function, to make canvas fit the width and height of device.
 		
 	-->
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" />
+	<link rel="stylesheet" href="assets/icomoon/style.css">
 	<script src="assets/fabric/fabric.full.js"></script>	
 	<script>
 		function resize(){
@@ -28,14 +33,52 @@
 				width: 100%;
 				height: 100%;
 				margin: 0px;
+				font-family: 'Oxygen';
 			}
 			.canvas-container{
 				width: 100% !absolute;
 				height: 100% !absolute;
 			}
+			nav {
+				background: #000;
+				position: absolute;
+				width: 100%;
+				height: 40px;
+				border-bottom: 4px solid #ccc;
+				z-index: 100;
+			}
+			.button{
+				box-sizing: border-box;
+				width: 80px;
+				height: 50px;
+				padding: 10px 0px;
+				position: absolute;
+			}
+			.icon{
+				color: #fff;
+				font-size: 20px;
+				margin: 7px;
+			}
+			.menu {
+				font-size: 16px;
+				font-weight: 700;
+				color: #fff;
+				position:  absolute;
+			}
+			.right{
+				right: 0;
+			}
 		</style>
 	</head>
 	<body >
+		<nav>
+			<div id="clear-canvas" class='button left'>
+				<span class="icon-file icon"></span><span class="menu">NEW</span>
+			</div>
+			<div class='button right'>
+				<span class="icon-disk icon"></span><span class="menu">SAVE</span>
+			</div>
+		</nav>		
 		<canvas  id="playGround"style="width: 100%; height: 100%"></canvas>
 		<script>
 			//Resize the canvas before fabric.js process it
@@ -43,88 +86,29 @@
 		</script>
 			
 		<div style="display: none; margin-left: 10px">
-			<button id="drawing-mode" class="btn btn-info">Cancel drawing mode</button><br>
-			<button id="clear-canvas" class="btn btn-info">Clear</button><br>
-
-			<div id="drawing-mode-options">
-				<label for="drawing-mode-selector">Mode:</label>
-				<select id="drawing-mode-selector">
-				  <option>Pencil</option>
-				  <option>Circle</option>
-				  <option>Spray</option>
-				  <option>Pattern</option>
-
-				  <option>hline</option>
-				  <option>vline</option>
-				  <option>square</option>
-				  <option>diamond</option>
-				  <option>texture</option>
-				</select><br>
-
-				<label for="drawing-line-width">Line width:</label>
-				<span class="info">5</span><input type="range" value="5" min="0" max="150" id="drawing-line-width"><br>
-
-				<label for="drawing-color">Line color:</label>
-				<input type="color" value="#005E7A" id="drawing-color"><br>
-
-				<label for="drawing-shadow-color">Shadow color:</label>
-				<input type="color" value="#005E7A" id="drawing-shadow-color"><br>
-
-				<label for="drawing-shadow-width">Shadow width:</label>
-				<span class="info">0</span><input type="range" value="0" min="0" max="50" id="drawing-shadow-width"><br>
-
-				<label for="drawing-shadow-offset">Shadow offset:</label>
-				<span class="info">0</span><input type="range" value="0" min="0" max="50" id="drawing-shadow-offset"><br>
-			</div>
+			<input type="range" value="5" min="0" max="150" id="drawing-line-width"><br>
+			<input type="color" value="#ff0000" id="drawing-color"><br>
 		</div>
 		<script id="main">(function() {
-		  var $ = function(id){return document.getElementById(id)};
+			var $ = function(id){return document.getElementById(id)};
 
-		  var canvas = this.__canvas = new fabric.Canvas('playGround', {
-			isDrawingMode: true
-		  });
+			var canvas = this.__canvas = new fabric.Canvas('playGround', {
+				isDrawingMode: true
+			});
 
-		  fabric.Object.prototype.transparentCorners = false;
+			fabric.Object.prototype.transparentCorners = false;
 
-		  var drawingModeEl = $('drawing-mode'),
-			  drawingOptionsEl = $('drawing-mode-options'),
-			  drawingColorEl = $('drawing-color'),
-			  drawingShadowColorEl = $('drawing-shadow-color'),
-			  drawingLineWidthEl = $('drawing-line-width'),
-			  drawingShadowWidth = $('drawing-shadow-width'),
-			  drawingShadowOffset = $('drawing-shadow-offset'),
-			  clearEl = $('clear-canvas');
-
-		  clearEl.onclick = function() { canvas.clear() };
-
-		  drawingModeEl.onclick = function() {
-			canvas.isDrawingMode = !canvas.isDrawingMode;
-			if (canvas.isDrawingMode) {
-			  drawingModeEl.innerHTML = 'Cancel drawing mode';
-			  drawingOptionsEl.style.display = '';
-			}
-			else {
-			  drawingModeEl.innerHTML = 'Enter drawing mode';
-			  drawingOptionsEl.style.display = 'none';
-			}
-		  };
-
-		  $('drawing-mode-selector').onchange = function() {
-			  canvas.freeDrawingBrush = new fabric[this.value + 'Brush'](canvas);
+			var drawingColorEl = $('drawing-color'),
+				drawingLineWidthEl = $('drawing-line-width'),
+				clearEl = $('clear-canvas');
+			clearEl.onclick = function() { canvas.clear() };
 
 			if (canvas.freeDrawingBrush) {
-			  canvas.freeDrawingBrush.color = drawingColorEl.value;
-			  canvas.freeDrawingBrush.width = parseInt(drawingLineWidthEl.value, 10) || 1;
-			  canvas.freeDrawingBrush.shadowBlur = parseInt(drawingShadowWidth.value, 10) || 0;
-			}
-		  };
-
-		  if (canvas.freeDrawingBrush) {
-			canvas.freeDrawingBrush.color = drawingColorEl.value;
-			canvas.freeDrawingBrush.width = parseInt(drawingLineWidthEl.value, 10) || 1;
-			canvas.freeDrawingBrush.shadowBlur = 0;
-		  }
-		})();
+				canvas.freeDrawingBrush.color = drawingColorEl.value;
+				canvas.freeDrawingBrush.width = parseInt(drawingLineWidthEl.value, 10) || 1;
+				canvas.freeDrawingBrush.shadowBlur = 0;
+				}
+			})();
 		</script>
 		<script>
 			(function() {
