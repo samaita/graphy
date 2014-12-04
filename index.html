@@ -5,6 +5,9 @@
 	Developer: @GaryAlmas
 	Graphy, simple sketch app using Fabric.js, Free Drawing.
 	
+	v0.0.3:
+		Enable Save button.
+	
 	v0.0.2:
 		Add & Enable button Clear / New Draw
 		Simplified FreeDrawing.
@@ -17,12 +20,32 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" />
 	<link rel="stylesheet" href="assets/icomoon/style.css">
 	<script src="assets/fabric/fabric.full.js"></script>	
+	<script src="assets/jquery/jquery.min.js"></script>	
 	<script>
 		function resize(){
 			var lowercanvas = document.getElementById("playGround");
 			lowercanvas.width = document.body.clientWidth;
 			lowercanvas.height = document.body.clientHeight;	
 		}
+		function saveImage(canvasId){
+			var canvas = document.getElementById(canvasId);
+			var img    = canvas.toDataURL("image/png");
+
+			$.ajax({
+				type: "POST",
+				url: "save.php",
+				data: { 
+				 imgBase64: img
+				}
+				}).done(function(o) {
+				console.log('saved'); 
+				// If you want the file to be visible in the browser 
+				// - please modify the callback in javascript. All you
+				// need is to return the url to the file, you just saved 
+				// and than put the image in your browser.
+				});
+		}
+
 	</script>
 		<style>
 			@font-face {
@@ -75,7 +98,7 @@
 			<div id="clear-canvas" class='button left'>
 				<span class="icon-file icon"></span><span class="menu">NEW</span>
 			</div>
-			<div class='button right'>
+			<div class='button right' onclick='saveImage("playGround")'>
 				<span class="icon-disk icon"></span><span class="menu">SAVE</span>
 			</div>
 		</nav>		
@@ -109,6 +132,7 @@
 				canvas.freeDrawingBrush.shadowBlur = 0;
 				}
 			})();
+			
 		</script>
 		<script>
 			(function() {
