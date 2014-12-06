@@ -5,6 +5,9 @@
 	Developer: @GaryAlmas
 	Graphy, simple sketch app using Fabric.js, Free Drawing.
 	
+	v0.0.5:
+		Show and Hide View Saved Image
+	
 	v0.0.4:
 		Add button View Saved Image
 		Add file View Saved Image
@@ -31,9 +34,6 @@
 			lowercanvas.width = document.body.clientWidth;
 			lowercanvas.height = document.body.clientHeight;	
 		}		
-		function page(name){
-			window.location.href = name;
-		}
 		function saveImage(canvasId){
 			var canvas = document.getElementById(canvasId);
 			var img    = canvas.toDataURL("image/png");
@@ -47,8 +47,27 @@
 				}).done(function(o) {
 				console.log('saved'); 
 				});
-		}
-
+		};
+		$( document ).ready(function() {
+			$('#page-view').hide();
+					
+				$('#menu-view').click(function(){
+						$('#nav-draw').slideUp();
+						$('#page-draw').fadeOut();
+						$('#page-view').fadeIn();
+						$('#menu-draw').removeClass('active');
+						$('#menu-view').addClass('active');
+					});
+				
+				$('#menu-draw').click(function(){
+						$('#nav-draw').slideDown();
+						$('#page-draw').fadeIn();
+						$('#page-view').fadeOut();
+						$('#menu-draw').addClass('active');
+						$('#menu-view').removeClass('active');
+					});		
+		});
+		
 	</script>
 		<style>
 			@font-face {
@@ -67,7 +86,7 @@
 			}
 			nav {
 				background: #000;
-				position: absolute;
+				position: fixed;
 				width: 100%;
 				height: 40px;
 				border-bottom: 4px solid #ccc;
@@ -94,21 +113,65 @@
 			.right{
 				right: 0;
 			}
+			#page-draw, #page-view{
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				box-sizing: border-box;
+				background: #fff;
+			}
+			.button-bottom{
+				padding-bottom:0px;
+				height: 40px;
+				width: 90px;
+				padding: 10px 0px;
+			}
+			.frame {
+				width: 260px;
+				height: 130px;
+				background: #fff;
+				margin: auto;
+				margin-bottom: 15px;
+				border: 1px solid #ccc;
+			}
+			#page-view{
+				padding-top: 15px;
+			}
+			.active{
+				background: #09f;
+			}
+			#main-nav{
+				bottom: 0;
+				border: 0px;
+				border-top: 4px solid #ccc
+			}
 		</style>
 	</head>
 	<body >
-		<nav>
+		<nav id='nav-draw'>
 			<div id="clear-canvas" class='button left'>
 				<span class="icon-file icon"></span><span class="menu">NEW</span>
 			</div>
 			<div class='button right' onclick='saveImage("playGround")'>
 				<span class="icon-disk icon"></span><span class="menu">SAVE</span>
 			</div>
-		</nav>		
-		<canvas  id="playGround"style="width: 100%; height: 100%"></canvas>
-		<nav style='bottom: 0'>
-			<div class='button right' style='padding-bottom:0px; height: 0px' onclick='page("data/view.html")'>
-				<span class="icon-disk icon"></span><span class="menu">VIEW</span>
+		</nav>
+
+		<section id='page-draw' style=''>
+			<canvas  id="playGround" style="width: 100%; height: 100%"></canvas>
+		</section>
+		
+		<section id='page-view'>
+			<div class='frame'></div>
+			<div class='frame'></div>
+		</section>
+		
+		<nav id='main-nav'>
+			<div id='menu-draw' class='button button-bottom left active'>
+				<span class="icon-pencil icon"></span><span class="menu">DRAW</span>
+			</div>
+			<div id='menu-view' class='button button-bottom right' >
+				<span class="icon-images icon"></span><span class="menu">VIEW</span>
 			</div>
 		</nav>	
 		
@@ -116,11 +179,6 @@
 			//Resize the canvas before fabric.js process it
 			resize();
 		</script>
-		
-		<div style="display: none; margin-left: 10px">
-			<input type="range" value="5" min="0" max="150" id="drawing-line-width"><br>
-			<input type="color" value="#ff0000" id="drawing-color"><br>
-		</div>
 		<script id="main">(function() {
 			var $ = function(id){return document.getElementById(id)};
 
@@ -136,14 +194,12 @@
 			clearEl.onclick = function() { canvas.clear() };
 
 			if (canvas.freeDrawingBrush) {
-				canvas.freeDrawingBrush.color = drawingColorEl.value;
-				canvas.freeDrawingBrush.width = parseInt(drawingLineWidthEl.value, 10) || 1;
+				canvas.freeDrawingBrush.color = "#000000";
+				canvas.freeDrawingBrush.width = parseInt(5, 10) || 1;
 				canvas.freeDrawingBrush.shadowBlur = 0;
 				}
 			})();
 			
-		</script>
-		<script>
 			(function() {
 				fabric.util.addListener(fabric.window, 'load', function() {
 					var canvas = this.__canvas || this.canvas,
