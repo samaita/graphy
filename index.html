@@ -5,6 +5,11 @@
 	Developer: @GaryAlmas
 	Graphy, simple sketch app using Fabric.js, Free Drawing.
 	
+	v0.0.6:
+		Read & Write JSON data
+		Generate view for each read data
+		Reload after successful save
+	
 	v0.0.5:
 		Show and Hide View Saved Image
 	
@@ -45,9 +50,10 @@
 				 imgBase64: img
 				}
 				}).done(function(o) {
-				console.log('saved'); 
+					location.reload(); 
 				});
 		};
+
 		$( document ).ready(function() {
 			$('#page-view').hide();
 					
@@ -69,6 +75,7 @@
 		});
 		
 	</script>
+	
 		<style>
 			@font-face {
 				font-family: Oxygen;
@@ -135,6 +142,8 @@
 				border: 1px solid #ccc;
 			}
 			#page-view{
+				height: auto;
+				margin-bottom: 40px;
 				padding-top: 15px;
 			}
 			.active{
@@ -162,8 +171,6 @@
 		</section>
 		
 		<section id='page-view'>
-			<div class='frame'></div>
-			<div class='frame'></div>
 		</section>
 		
 		<nav id='main-nav'>
@@ -215,5 +222,18 @@
 				});
 			})();
 		</script>
+		<script>
+		function graphyData(data){
+			var i;
+			for(i = 0; i < data.length; i++){
+				var newView = document.createElement("div");
+				newView.className = 'frame';
+				newView.style.backgroundImage = "url(" + data[i].url +")";
+				newView.style.backgroundSize = "260px auto";
+				document.getElementById("page-view").appendChild(newView);
+			}
+		}
+		</script>
+		<script src="data/data.js"></script>
 	</body>
 </html>
