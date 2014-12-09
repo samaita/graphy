@@ -9,18 +9,15 @@
 	$name = UPLOAD_DIR . '' . $id . '.png';
 	$success = file_put_contents($name, $data);
 	
-	$getFile = file("data.js"); // Get the file
-	unset($getFile[count($getFile)-1]); // Remove Last Array
+	$getFile = file("data.html"); // Get the file
+	//unset($getFile[count($getFile)-1]); // Remove Last Array
 	$getFileS = implode($getFile); // Turn Array to String but in exact condition, not turn it to one line
 	
 $addThis = <<<EOT
-,{
-"name" : "$id", 
-"url" : "data/$name"
-}
-]);
+
+<div class="frame" style="background-image: url(data/$id.png); background-size: 260px;"></div>
 EOT;
 	
-	file_put_contents("data.js", $getFileS . $addThis); // Join old data and new data
+	file_put_contents("data.html", $getFileS . $addThis); // Join old data and new data
 
 ?>

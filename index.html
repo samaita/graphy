@@ -5,6 +5,10 @@
 	Developer: @GaryAlmas
 	Graphy, simple sketch app using Fabric.js, Free Drawing.
 	
+	v0.0.7:
+		Change method to reload data, reload every view clicked
+		Change method to save data, saved in html instead
+	
 	v0.0.6:
 		Read & Write JSON data
 		Generate view for each read data
@@ -50,10 +54,9 @@
 				 imgBase64: img
 				}
 				}).done(function(o) {
-					location.reload(); 
+					//location.reload(); 
 				});
 		};
-
 		$( document ).ready(function() {
 			$('#page-view').hide();
 					
@@ -63,6 +66,10 @@
 						$('#page-view').fadeIn();
 						$('#menu-draw').removeClass('active');
 						$('#menu-view').addClass('active');
+						var urlData = 'data/data.html';
+						$.get( urlData, function( data ) {
+							$("#page-view").append(data);							
+						});					
 					});
 				
 				$('#menu-draw').click(function(){
@@ -71,11 +78,11 @@
 						$('#page-view').fadeOut();
 						$('#menu-draw').addClass('active');
 						$('#menu-view').removeClass('active');
+						$( ".frame" ).remove();
 					});		
 		});
 		
-	</script>
-	
+		</script>	
 		<style>
 			@font-face {
 				font-family: Oxygen;
@@ -177,11 +184,11 @@
 			<div id='menu-draw' class='button button-bottom left active'>
 				<span class="icon-pencil icon"></span><span class="menu">DRAW</span>
 			</div>
-			<div id='menu-view' class='button button-bottom right' >
+			<div id='menu-view' class='button button-bottom right'>
 				<span class="icon-images icon"></span><span class="menu">VIEW</span>
 			</div>
 		</nav>	
-		
+
 		<script>
 			//Resize the canvas before fabric.js process it
 			resize();
@@ -222,18 +229,5 @@
 				});
 			})();
 		</script>
-		<script>
-		function graphyData(data){
-			var i;
-			for(i = 0; i < data.length; i++){
-				var newView = document.createElement("div");
-				newView.className = 'frame';
-				newView.style.backgroundImage = "url(" + data[i].url +")";
-				newView.style.backgroundSize = "260px auto";
-				document.getElementById("page-view").appendChild(newView);
-			}
-		}
-		</script>
-		<script src="data/data.js"></script>
 	</body>
 </html>
